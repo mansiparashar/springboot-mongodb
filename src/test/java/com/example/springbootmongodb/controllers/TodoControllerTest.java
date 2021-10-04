@@ -70,17 +70,6 @@ class TodoControllerTest {
                 .andExpect(status().isOk());
     }
 
-
-    @Test
-    void testGetAllTodosNotFound() throws Exception {
-
-        when(todoRepo.findAll()).thenReturn(Collections.emptyList());
-
-        mockMvc.perform(get(PATH))
-                .andDo(print())
-                .andExpect(status().isNotFound());
-    }
-
     @Test
     void testGetTodo() throws Exception {
         when(todoRepo.findById(anyString())).thenReturn(Optional.of(todoDTO));

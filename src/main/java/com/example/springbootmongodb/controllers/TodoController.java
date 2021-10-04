@@ -26,10 +26,8 @@ public class TodoController {
     private TodoRepository todoRepo;
 
     @GetMapping
-    public ResponseEntity<?> getAllTodos() {
-        List<TodoDTO> todos = todoRepo.findAll();
-        return !CollectionUtils.isEmpty(todos) ? ResponseEntity.ok(todos) :
-                new ResponseEntity<>("No todos available", HttpStatus.NOT_FOUND);
+    public ResponseEntity<List<TodoDTO>> getAllTodos() {
+        return ResponseEntity.ok(todoRepo.findAll());
     }
 
 
