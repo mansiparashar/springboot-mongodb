@@ -1,4 +1,4 @@
-package com.example.springbootmongodb.contollers;
+package com.example.springbootmongodb.controllers;
 
 import com.example.springbootmongodb.model.TodoDTO;
 import com.example.springbootmongodb.repository.TodoRepository;
