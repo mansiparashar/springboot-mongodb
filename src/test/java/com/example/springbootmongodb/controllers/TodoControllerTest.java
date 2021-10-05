@@ -1,4 +1,4 @@
-package com.example.springbootmongodb.contollers;
+package com.example.springbootmongodb.controllers;
 
 import com.example.springbootmongodb.model.TodoDTO;
 import com.example.springbootmongodb.repository.TodoRepository;
@@ -15,9 +15,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -36,6 +35,9 @@ class TodoControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private ObjectMapper mongoJsonMapper;
+
     @MockBean
     private TodoRepository todoRepo;
 
@@ -48,9 +50,9 @@ class TodoControllerTest {
         todoDTO = TodoDTO.builder()
                 .todo("make unit test")
                 .completed(Boolean.TRUE)
-                .createdAt(new Date())
+                .createdAt(LocalDate.now())
                 .description("difficult")
-                .updatedAt(new Date())
+                .updatedAt(LocalDate.now())
                 .id("abc-123")
                 .build();
     }
@@ -68,17 +70,6 @@ class TodoControllerTest {
         mockMvc.perform(get(PATH))
                 .andDo(print())
                 .andExpect(status().isOk());
-    }
-
-
-    @Test
-    void testGetAllTodosNotFound() throws Exception {
-
-        when(todoRepo.findAll()).thenReturn(Collections.emptyList());
-
-        mockMvc.perform(get(PATH))
-                .andDo(print())
-                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -107,7 +98,7 @@ class TodoControllerTest {
         mockMvc.perform(post(PATH)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(todoDTO)))
+                        .content(mongoJsonMapper.writeValueAsString(todoDTO)))
                 .andDo(print())
                 .andExpect(status().isOk());
     }

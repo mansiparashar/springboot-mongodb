@@ -1,11 +1,10 @@
-package com.example.springbootmongodb.contollers;
+package com.example.springbootmongodb.controllers;
 
 import com.example.springbootmongodb.model.TodoDTO;
 import com.example.springbootmongodb.repository.TodoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,17 +25,15 @@ public class TodoController {
     private TodoRepository todoRepo;
 
     @GetMapping
-    public ResponseEntity<?> getAllTodos() {
-        List<TodoDTO> todos = todoRepo.findAll();
-        return !CollectionUtils.isEmpty(todos) ? ResponseEntity.ok(todos) :
-                new ResponseEntity<>("No todos available", HttpStatus.NOT_FOUND);
+    public ResponseEntity<List<TodoDTO>> getAllTodos() {
+        return ResponseEntity.ok(todoRepo.findAll());
     }
 
 
     @PostMapping
     public ResponseEntity<?> createTodo(@RequestBody TodoDTO todo) {
         try {
-            todo.setCreatedAt(new Date(System.currentTimeMillis()));
+            todo.setCreatedAt(LocalDate.now());
             todoRepo.save(todo);
             return new ResponseEntity<>(todo, HttpStatus.OK);
         } catch (Exception e) {
@@ -58,7 +55,7 @@ public class TodoController {
             t.setCompleted(todo.getCompleted() != null ? todo.getCompleted() : t.getCompleted());
             t.setTodo(todo.getTodo() != null ? todo.getTodo() : t.getTodo());
             t.setDescription(todo.getDescription() != null ? todo.getDescription() : t.getDescription());
-            t.setUpdatedAt(new Date(System.currentTimeMillis()));
+            t.setUpdatedAt(LocalDate.now());
             todoRepo.save(t);
             return new ResponseEntity<>(t, HttpStatus.OK);
         } else {
